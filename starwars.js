@@ -18,12 +18,8 @@ const artist = 'John Williams'
 play({audioUrl,coverImageUrl,title,artist}, document.body)
 
 let ulFilmes = document.querySelector('#filmes ul')
-
-let swapiResult = await fetch(API_ENDPOINT)
-    .then(swapiR => swapiR.json())
-
-let listaFilmes = await friendlyFetch(swapiResult.films)
-
+let introducao = document.querySelector(".introducao-animada")
+let atual = 1
 
 function numeroParaRomano(emoji) {
     const dados = {
@@ -37,25 +33,29 @@ function numeroParaRomano(emoji) {
     return dados[emoji]
  }
 
-let atual = 1
-
-let introducao = document.querySelector(".introducao-animada")
-
 function trocaIntro(element, numeralStr) {
     introducao.innerHTML = `EPISODE ${numeralStr} \n ${element.title.toUpperCase()} \n ${element.opening_crawl}`
     restartAnimation(introducao)
 }
 
-listaFilmes.results.sort((first,second) => (first.episode_id > second.episode_id) ? 1 : -1)
+async function montaListaFilmes(){
+    let swapiResult = await friendlyFetch(API_ENDPOINT)
 
-listaFilmes.results.forEach(element => {
-    let li = document.createElement('li')
-    let numeralStr = `${numeroParaRomano(atual)}`
-    numeralStr = numeralStr.padEnd(3)
-    li.innerHTML = `Episode ${numeralStr} - ${element.title}`
-    li.addEventListener('click', e => {
-        trocaIntro(element, numeralStr)
+    let listaFilmes = await friendlyFetch(swapiResult.films)
+
+    listaFilmes.results.sort((first,second) => (first.episode_id > second.episode_id) ? 1 : -1)
+
+    listaFilmes.results.forEach(element => {
+        let li = document.createElement('li')
+        let numeralStr = `${numeroParaRomano(atual)}`
+        numeralStr = numeralStr.padEnd(3)
+        li.innerHTML = `Episode ${numeralStr} - ${element.title}`
+        li.addEventListener('click', e => {
+            trocaIntro(element, numeralStr)
+        })
+        ulFilmes.appendChild(li)
+        atual++
     })
-    ulFilmes.appendChild(li)
-    atual++
-});
+}
+
+montaListaFilmes()
