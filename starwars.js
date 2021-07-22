@@ -38,11 +38,21 @@ function numeroParaRomano(emoji) {
 
 let atual = 1
 
+let introducao = document.querySelector(".introducao-animada")
+
+function trocaIntro(element, numeralStr) {
+    introducao.innerHTML = `EPISODE ${numeralStr} \n ${element.title.toUpperCase()} \n ${element.opening_crawl}`
+    restartAnimation(introducao)
+}
+
 listaFilmes.results.forEach(element => {
     let li = document.createElement('li')
     let numeralStr = `${numeroParaRomano(atual)}`
     numeralStr = numeralStr.padEnd(3)
     li.innerHTML = `Episode ${numeralStr} - ${element.title}`
+    li.addEventListener('click', e => {
+        trocaIntro(element, numeralStr)
+    })
     ulFilmes.appendChild(li)
     atual++
 });
