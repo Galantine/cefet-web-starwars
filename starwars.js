@@ -16,3 +16,33 @@ const title = 'Intro'
 const artist = 'John Williams'
 
 play({audioUrl,coverImageUrl,title,artist}, document.body)
+
+let ulFilmes = document.querySelector('#filmes ul')
+
+let swapiResult = await fetch(API_ENDPOINT)
+    .then(swapiR => swapiR.json())
+
+let listaFilmes = await friendlyFetch(swapiResult.films)
+
+function numeroParaRomano(emoji) {
+    const dados = {
+       '1': 'I',
+       '2': 'II',
+       '3': 'III',
+       '4': 'IV',
+       '5': 'V',
+       '6': 'VI'
+    }
+    return dados[emoji]
+ }
+
+let atual = 1
+
+listaFilmes.results.forEach(element => {
+    let li = document.createElement('li')
+    let numeralStr = `${numeroParaRomano(atual)}`
+    numeralStr = numeralStr.padEnd(3)
+    li.innerHTML = `Episode ${numeralStr} - ${element.title}`
+    ulFilmes.appendChild(li)
+    atual++
+});
