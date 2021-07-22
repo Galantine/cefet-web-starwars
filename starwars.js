@@ -24,6 +24,7 @@ let swapiResult = await fetch(API_ENDPOINT)
 
 let listaFilmes = await friendlyFetch(swapiResult.films)
 
+
 function numeroParaRomano(emoji) {
     const dados = {
        '1': 'I',
@@ -44,6 +45,8 @@ function trocaIntro(element, numeralStr) {
     introducao.innerHTML = `EPISODE ${numeralStr} \n ${element.title.toUpperCase()} \n ${element.opening_crawl}`
     restartAnimation(introducao)
 }
+
+listaFilmes.results.sort((first,second) => (first.episode_id > second.episode_id) ? 1 : -1)
 
 listaFilmes.results.forEach(element => {
     let li = document.createElement('li')
